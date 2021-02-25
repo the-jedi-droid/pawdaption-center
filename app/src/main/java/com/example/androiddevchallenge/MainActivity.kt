@@ -20,11 +20,19 @@ import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
+import androidx.compose.material.Button
+import androidx.compose.material.Card
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -35,7 +43,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
-import androidx.navigation.compose.*
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.navArgument
+import androidx.navigation.compose.navigate
+import androidx.navigation.compose.rememberNavController
 import com.example.androiddevchallenge.ui.theme.MyTheme
 import com.example.pets.data.Dog
 
@@ -64,10 +76,12 @@ fun AppNavigator() {
 
     NavHost(navController = navigator, startDestination = "home") {
         composable("home") { HomeScreen(com.example.pets.data.Pets.dogs, navigator) }
-        composable("details/{dog}",
+        composable(
+            "details/{dog}",
             arguments = listOf(
                 navArgument("dog") { type = NavType.StringType }
-            )) { backStackEntry ->
+            )
+        ) { backStackEntry ->
             backStackEntry.arguments?.getString("dog")
                 ?.let { DetailScreen(dogName = it, navHostController = navigator) }
         }
@@ -119,9 +133,11 @@ fun PetList(pets: List<Dog>, modifier: Modifier = Modifier, navHostController: N
 
 @Composable
 fun PetItem(pet: Dog, modifier: Modifier = Modifier, navHostController: NavHostController) {
-    Card(modifier = modifier
-        .fillMaxWidth()
-        .clickable { navHostController.navigate("details/${pet.name}") }) {
+    Card(
+        modifier = modifier
+            .fillMaxWidth()
+            .clickable { navHostController.navigate("details/${pet.name}") }
+    ) {
         Column(modifier = modifier.padding(8.dp)) {
             Image(
                 painter = painterResource(id = pet.resId),
